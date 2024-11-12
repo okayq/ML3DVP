@@ -17,8 +17,6 @@ def PSNR(pred, true):
     return 20 * np.log10(255) - 10 * np.log10(mse)
 
 def metric(pred, true, mean, std, return_ssim_psnr=True, clip_range=[0, 1]):
-    pred = pred*std + mean
-    true = true*std + mean
     mae = MAE(pred, true)
     mse = MSE(pred, true)
 
@@ -32,24 +30,6 @@ def metric(pred, true, mean, std, return_ssim_psnr=True, clip_range=[0, 1]):
                 psnr += PSNR(pred[b, f], true[b, f])
         ssim = ssim / (pred.shape[0] * pred.shape[1])
         psnr = psnr / (pred.shape[0] * pred.shape[1])
-        # for b in range(pred.shape[0]):
-        #     for f in range(pred.shape[1]):
-        #         pred = pred[b,f]
-        #         true = true[b,f]
-        #         print(pred.shape, true.shape)
-        #         # pred_np = pred.detach().cpu().numpy()
-        #         # true_np = true.detach().cpu().numpy()
-        #         psnr = PSNR(pred, true)
-        #         # ssim = cal_ssim(pred.swapaxes(0, 2), true.swapaxes(0,2), multichannel=True, channel_axis=2, data_range=1)
-        #         loss_psnr += psnr.item()
-        #         loss_ssim += ssim.item()
-        #         win_size = min(pred.shape[3], pred.shape[4])
-        #         if win_size % 2 == 0:
-        #             win_size -= 1
-        #         ssim += cal_ssim(pred.swapaxes(0, 2), true.swapaxes(0, 2), multichannel=True, channel_axis=2)
-        #         # psnr += PSNR(pred[b, f], true[b, f])
-        # ssim = ssim / (pred.shape[0] * pred.shape[1])
-        # psnr = psnr / (pred.shape[0] * pred.shape[1])
         return mse, mae, ssim, psnr
     else:
         return mse, mae
